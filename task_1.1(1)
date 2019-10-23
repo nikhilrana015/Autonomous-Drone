@@ -8,6 +8,7 @@ from std_msgs.msg import Int32, Float32, Float64
 import rospy
 import time
 import math
+import random
 
 
 class DroneFly():
@@ -44,7 +45,7 @@ class DroneFly():
 		self.cmd.rcAUX4 = 1500
 		self.cmd.plutoIndex = 0
 
-		self.drone_x = 0.0
+		self.drone_x = 1750.0
 		self.drone_y = 0.0
 		self.drone_z = 0.0
 		self.drone_yaw = 0.0
@@ -55,7 +56,7 @@ class DroneFly():
 		self.kd_roll = 64.0
 
 		#PID constants for Pitch
-		self.kp_pitch = 500.0
+		self.kp_pitch = 600.0
 		self.ki_pitch = 0.0
 		self.kd_pitch = 75.0
 		
@@ -77,7 +78,7 @@ class DroneFly():
 
 		# Loop time for PID computation. You are free to experiment with this
 		self.last_time = 0.0
-		self.loop_time = 0.032
+		self.loop_time = 0.036
 
 		self.last_alt_error = 0.0
 		self.alt_error_sum = 0.0
@@ -216,10 +217,10 @@ class DroneFly():
 			return input_value
 
 	def publish_plot_data(self):
-		alt_pub = rospy.Publisher('alt_error', Float32, queue_size=10)
-		pitch_pub = rospy.Publisher('pitch_error', Float32, queue_size=10)
-		roll_pub = rospy.Publisher('roll_error', Float32, queue_size=10)
-		zero_line_data_pub = rospy.Publisher('zero_line_data', Float32, queue_size=10)
+		alt_pub = rospy.Publisher('alt_error', Float32, queue_size=20)
+		pitch_pub = rospy.Publisher('pitch_error', Float32, queue_size=20)
+		roll_pub = rospy.Publisher('roll_error', Float32, queue_size=20)
+		zero_line_data_pub = rospy.Publisher('zero_line_data', Float32, queue_size=20)
 
 
 		alt_error = self.wp_z - self.drone_z
@@ -273,9 +274,9 @@ class DroneFly():
 		#This is the subscriber function to get the whycon poses
 		#The x, y and z values are stored within the drone_x, drone_y and the drone_z variables
 
-		self.drone_x = pose.poses[0].position.x
-		self.drone_y = pose.poses[0].position.y
-		self.drone_z = pose.poses[0].position.z
+		self.drone_x = pose.poses[1].position.x
+		self.drone_y = pose.poses[1].position.y
+		self.drone_z = pose.poses[1].position.z
 
 	def get_yaw(self, drone_yaw):
 
